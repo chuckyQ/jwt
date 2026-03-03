@@ -82,7 +82,7 @@ func (t *token) signingString() (string, error) {
 }
 
 // VerifyJWT verifies a given JWT and checks if it is expired.
-func VerifyJWT(jwt string, secret []byte) (bool, map[string]string, map[string]any, error) {
+func Verify(jwt string, secret []byte) (bool, map[string]string, map[string]any, error) {
 
 	parts := strings.Split(jwt, ".")
 
