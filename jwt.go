@@ -4,8 +4,8 @@
 package jwt
 
 import (
-	"crypto"
 	"crypto/hmac"
+	"crypto/sha256"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -19,7 +19,6 @@ type token struct {
 	Claims map[string]any    // Claims is the second segment of the token in decoded form
 }
 
-const hashFn = crypto.SHA256
 const hashName = "HS256"
 
 func encodeSegment(seg []byte) string {
@@ -32,7 +31,7 @@ func (t *token) signedString(secret []byte) (string, error) {
 		return "", err
 	}
 
-	hm := hmac.New(hashFn.New, secret)
+	hm := hmac.New(sha256.New, secret)
 	_, err = hm.Write([]byte(sstr))
 	if err != nil {
 		return "", err
@@ -114,7 +113,7 @@ func Verify(jwt string, secret []byte) (bool, map[string]string, map[string]any,
 		return false, nil, nil, err
 	}
 
-	h := hmac.New(hashFn.New, secret)
+	h := hmac.New(sha256.New, secret)
 	sstr, err := tok.signingString()
 
 	if err != nil {
