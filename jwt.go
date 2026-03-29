@@ -150,3 +150,23 @@ func New(claims map[string]any, timeout int, secret []byte) (string, error) {
 
 	return t.signedString(secret)
 }
+
+func Expired(m map[string]any) bool {
+
+	exp, ok := m["exp"]
+
+	if !ok {
+		return true
+	}
+
+	e, ok := exp.(float64)
+
+	if !ok {
+		return true
+	}
+
+	now := time.Now().Unix()
+
+	return int64(e) < now
+
+}
